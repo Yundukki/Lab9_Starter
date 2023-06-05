@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "ea4e517224ef4a3daa542ea52004b820"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -88,6 +96,13 @@
   </main>
 
   <script>
+    class InvalidInputError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "InvalidInputError";
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,12 +110,85 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new InvalidInputError("Invalid input values");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        if (error instanceof InvalidInputError) {
+          console.error("Input value is invalid:", error.message);
+          // You can perform additional error handling specific to InvalidInputError here
+        }
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
+    errorBtns[0].addEventListener('click', () => {
+      console.log("console log msg");
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      console.error("console error msg")
+    });
+
+    errorBtns[2].addEventListener('click', () => {
+      console.count("console count")
+    });
+
+    errorBtns[3].addEventListener('click', () => {
+      console.warn("console warn");
+    });
+
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(false, "error msg: Number does not equal 3");
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(errorBtns[6]);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(errorBtns[7]);
+    });
+
+    errorBtns[8].addEventListener('click', () => {
+      console.group("Console Group");
+    });
+
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{ name: 'Software Engineering', num: 110}, { name: 'Programming Languages', num: 130 }]);
+    });
+
+    errorBtns[11].addEventListener('click', () => {
+      console.time("Timer Button");
+    });
+
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd("Timer Button");
+    });
+
+    errorBtns[13].addEventListener('click', () => {
+      console.trace();
+    });
+
+    errorBtns[14].addEventListener('click', () => {
+      throw new Error("Trigger Global Error");
+    });
+
+    TrackJS.track('Testing TrackJS!');
+                        
+
     // You may move this JS to another file if you wish
   </script>
 </body>
